@@ -21,6 +21,9 @@ Install the required packages using pip:
 pip install -r requirements.txt
 ```
 
+**If you are on windows, we have to install GTK3 from this [link](https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer/releases). Download the `.exe` and execute it.**
+
+
 run the server:
 
 ```
@@ -40,7 +43,13 @@ cd frontend
 npm install
 ```
 
-Then, run the frontend:
+Before running, create an `.env` file in the `frontend` directory and put this inside: 
+
+```
+VITE_BACKEND_URL=http://localhost:8000
+```
+
+Finally, run the frontend:
 
 ```
 npm run dev

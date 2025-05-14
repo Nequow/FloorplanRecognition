@@ -9,7 +9,7 @@ import io
 
 # Load the model
 model_path = "checkpoints/Best_EfficientNet_B0.pt"
-model = torch.load(model_path)
+model = torch.load(model_path, weights_only=False)
 model.eval()
 
 classes = ["other", "floor plan"]  # For all models except Roboflow2+random.pt
