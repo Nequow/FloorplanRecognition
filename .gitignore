@@ -1,0 +1,8 @@
+.vscode/
+cubicasa/
+uploads/
+Wall-**/
+.env
+
+*.ipynb
+checkpoints/*.pt
