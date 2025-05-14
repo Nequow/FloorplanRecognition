@@ -7,3 +7,4 @@ Wall-**/
 *.ipynb
 checkpoints/*.pt
 .DS_Store
+backend/__pycache__/
