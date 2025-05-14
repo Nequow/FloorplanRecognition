@@ -25,7 +25,7 @@ export default function UploadSection({
   };
 
   return (
-    <div className="grid w-full max-w-sm items-center gap-1.5">
+    <div className="grid w-full items-center gap-1.5">
       <Label className="font-light">{label}</Label>
 
       <div className="flex gap-2 items-center">
@@ -43,6 +43,24 @@ export default function UploadSection({
             >
               Supprimer
             </Button>
+            {accept === "image/*" && (
+              <Button
+                className="cursor-pointer"
+                variant="outline"
+                onClick={() => {
+                  // telecharger le fichier
+                  if (fileUrl) {
+                    const link = document.createElement("a");
+                    link.href = fileUrl;
+                    link.download =
+                      fileUrl.split("/").pop() + ".glb" || "download";
+                    link.click();
+                  }
+                }}
+              >
+                Télécharger
+              </Button>
+            )}
           </>
         ) : (
           <Input

@@ -156,48 +156,62 @@ export default function App() {
                 setShowScaleDialog={setShowScaleDialog}
               />
             )}
-            <Card className="flex flex-col gap-4 p-4 relative">
+            <Card className="flex flex-row p-4 max-w-full max-h-62 items-center relative">
               <div className="absolute top-4 right-4">
                 <ModeToggle />
               </div>
-              <h1 className="text-3xl font-bold">Manipulation 3D</h1>
 
-              <UploadSection
-                label="Importer le fond de plan :"
-                accept="image/*"
-                inputRef={baseInputRef as React.RefObject<HTMLInputElement>}
-                fileUrl={baseModelUrl}
-                onUpload={handleBaseUpload}
-                onClear={() => {
-                  setBaseModelUrl(null);
-                  if (baseInputRef.current) baseInputRef.current.value = "";
-                  toast.success(
-                    "Modèle 3D du Fond de plan supprimé avec succès !"
-                  );
-                }}
-              />
+              <div className="flex flex-col gap-4">
+                <h1 className="text-3xl font-bold">Manipulation 3D</h1>
 
-              <UploadSection
-                label="Importer un objet 3D (GLB ou OBJ) :"
-                accept=".glb,.obj"
-                inputRef={movableInputRef as React.RefObject<HTMLInputElement>}
-                fileUrl={movableModel.url}
-                onUpload={handleMovableUpload}
-                onClear={() => {
-                  setMovableModel({ url: null, fileName: null });
-                  if (movableInputRef.current)
-                    movableInputRef.current.value = "";
-                  toast.success("Modèle 3D supprimé avec succès !");
-                }}
-              />
-
-              {movableModel.url && (
-                <ModeSelector
-                  mode={transformMode}
-                  onChange={setTransformMode}
+                <UploadSection
+                  label="Importer le fond de plan :"
+                  accept="image/*"
+                  inputRef={baseInputRef as React.RefObject<HTMLInputElement>}
+                  fileUrl={baseModelUrl}
+                  onUpload={handleBaseUpload}
+                  onClear={() => {
+                    setBaseModelUrl(null);
+                    if (baseInputRef.current) baseInputRef.current.value = "";
+                    toast.success(
+                      "Modèle 3D du Fond de plan supprimé avec succès !"
+                    );
+                    setScaleDialogImage(null);
+                  }}
                 />
-              )}
 
+                <UploadSection
+                  label="Importer un objet 3D (GLB ou OBJ) :"
+                  accept=".glb,.obj"
+                  inputRef={
+                    movableInputRef as React.RefObject<HTMLInputElement>
+                  }
+                  fileUrl={movableModel.url}
+                  onUpload={handleMovableUpload}
+                  onClear={() => {
+                    setMovableModel({ url: null, fileName: null });
+                    if (movableInputRef.current)
+                      movableInputRef.current.value = "";
+                    toast.success("Modèle 3D supprimé avec succès !");
+                  }}
+                />
+
+                {movableModel.url && (
+                  <ModeSelector
+                    mode={transformMode}
+                    onChange={setTransformMode}
+                  />
+                )}
+              </div>
+
+              {baseModelUrl && (
+                <div>
+                  <img
+                    src={scaleDialogImage || ""}
+                    className="w-52 h-52 ml-20"
+                  ></img>
+                </div>
+              )}
               {/* {loading && <p>Traitement en cours...</p>} */}
             </Card>
 
