@@ -6,3 +6,4 @@ Wall-**/
 
 *.ipynb
 checkpoints/*.pt
+.DS_Store
