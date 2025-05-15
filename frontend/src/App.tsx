@@ -119,8 +119,20 @@ export default function App() {
         setLoading(false);
       }
     } catch (err) {
-      console.error("Erreur upload base:", err);
-      toast.error("L'image n'est pas un fond de plan valide !");
+      if (
+        typeof err === "object" &&
+        err !== null &&
+        "response" in err &&
+        typeof (err as any).response === "object" &&
+        (err as any).response !== null
+      ) {
+        const response = (err as any).response;
+        if (response.status === 400) {
+          toast.error("L'image n'est pas un fond de plan valide !");
+        } else if (response.status === 500) {
+          toast.error("Erreur lors de l'upload du modèle 3D !");
+        }
+      }
       setLoading(false);
       if (baseInputRef.current) baseInputRef.current.value = "";
       setBaseModelUrl(null);
