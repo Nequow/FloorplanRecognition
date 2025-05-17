@@ -2,10 +2,10 @@ import os
 from my_logger import my_logger
 
 paths = []
-DATASET = "./Floor plan dataset"
+DATASET = "./floorplan_dataset"
 CHECKPOINTS = "./checkpoints"
-TEXTURES_FOLDER = "./Textures"
-OBJ_MODELS = "./3D Models"
+TEXTURES_FOLDER = "./textures"
+OBJ_MODELS = "./3D_models"
 
 paths.extend([DATASET, CHECKPOINTS, TEXTURES_FOLDER, OBJ_MODELS])
 

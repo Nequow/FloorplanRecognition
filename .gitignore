@@ -8,5 +8,6 @@ Wall-**/
 checkpoints/*.pt
 .DS_Store
 backend/__pycache__/
-outputs/*
+outputs/*.glb
 outputs/test/*
+outputs/

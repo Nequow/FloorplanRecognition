@@ -88,6 +88,7 @@ export default function App() {
       if (response.data.class === "floor plan") {
         toast.success("L'image est un fond de plan valide !");
       } else {
+        toast.error("L'image n'est pas un fond de plan valide !");
         throw new Error("L'image n'est pas un fond de plan valide !");
       }
 

@@ -3,12 +3,13 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, File, UploadFile
 import torchvision.transforms as T
 from PIL import Image
+from constants import CHECKPOINTS
 import torch
 import io
 
 
 # Load the model
-model_path = "checkpoints/Best_EfficientNet_B0.pt"
+model_path = f"{CHECKPOINTS}/Best_EfficientNet_B0.pt"
 model = torch.load(model_path, weights_only=False)
 model.eval()
 
