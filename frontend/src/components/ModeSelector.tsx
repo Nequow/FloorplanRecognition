@@ -1,3 +1,4 @@
+import { Move3D, Rotate3D, Scale3D } from "lucide-react";
 import { Button } from "./ui/button";
 
 interface ModeSelectorProps {
@@ -14,11 +15,19 @@ export default function ModeSelector({ mode, onChange }: ModeSelectorProps) {
           variant={mode === m ? "default" : "outline"}
           onClick={() => onChange(m as any)}
         >
-          {m === "translate"
-            ? "Déplacer"
-            : m === "rotate"
-            ? "Tourner"
-            : "Redimensionner"}
+          {m === "translate" ? (
+            <>
+              <Move3D /> Déplacer
+            </>
+          ) : m === "rotate" ? (
+            <>
+              <Rotate3D /> Tourner
+            </>
+          ) : (
+            <>
+              <Scale3D /> Redimensioner
+            </>
+          )}
         </Button>
       ))}
     </div>

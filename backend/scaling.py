@@ -1,3 +1,4 @@
+from math import sqrt
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 from constants import DATASET
@@ -21,14 +22,16 @@ def show_scale_points_on_image(image_path, point1, point2):
     ax.plot(
         [point1[0], point2[0]],
         [point1[1], point2[1]],
-        "y--",
-        label="Distance de référence",
+        "g-",  # label="Distance de référence",
+        label="Reference distance",
+        linewidth=3,
     )
 
-    ax.set_title("Vérification des points d'échelle")
-    ax.legend()
-    plt.axis("equal")
-    plt.grid(True)
+    # ax.set_title("Vérification des points d'échelle")
+    ax.legend(bbox_to_anchor=(-0.2, -0.12), loc="lower left")
+    plt.axis("off")
+    # plt.axis("equal")
+    # plt.grid(True)
     plt.show()
 
 
@@ -43,7 +46,6 @@ def compute_scale(image_path, point1, point2, real_distance_m):
     # Calculer la distance en pixels entre les deux points
     pixel_distance = np.linalg.norm(np.array(point2) - np.array(point1))
     print(f"Distance en pixels : {pixel_distance:.2f}")
-
     # Calculer l'échelle (mètres/pixel)
     scale = real_distance_m / pixel_distance
     print(f"✅ Échelle estimée : {scale:.6f} m/pixel")
@@ -63,4 +65,5 @@ def compute_scale(image_path, point1, point2, real_distance_m):
 #     real_distance_m = 14.33
 
 
+# # show_scale_points_on_image(image_path, point1, point2)
 # scale = compute_scale(image_path, point1, point2, real_distance_m)

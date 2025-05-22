@@ -23,7 +23,7 @@ def detect_and_generate_3d(image_path: str, scale: float):
 
     output_path = f"outputs/{image_path.split('/')[-1].split('.')[0]}.glb"
     mesh = generate_3d_model_from_polygons(
-        polygons=polygons,
+        wall_polygons=polygons,
         wall_bboxes=bbox["wall_boxes"],
         door_data=(door_path, bbox["door_boxes"], scale * 0.6),
         window_data=(window_path, bbox["window_boxes"], scale * 0.6),

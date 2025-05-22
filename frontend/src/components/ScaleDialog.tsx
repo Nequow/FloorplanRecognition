@@ -8,6 +8,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { AlertDialogDescription } from "@radix-ui/react-alert-dialog";
+import { RotateCcw } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 interface Point {
@@ -107,9 +108,9 @@ export default function ScaleDialog({
 
   return (
     <AlertDialog open={open} onOpenChange={onClose}>
-      <AlertDialogContent>
+      <AlertDialogContent className="overflow-auto max-h-[95vh] w-full focus-visible:outline-none">
         <AlertDialogHeader>
-          <AlertDialogTitle>Définir l’échelle</AlertDialogTitle>
+          <AlertDialogTitle>Définition de l’échelle</AlertDialogTitle>
           <AlertDialogDescription className="text-sm font-light italic">
             Veuillez selectionner 2 points sur l'image pour définir l'échelle.
           </AlertDialogDescription>
@@ -129,9 +130,14 @@ export default function ScaleDialog({
           />
         </div>
 
-        <div className="my-2 text-sm">
-          Points sélectionnés : {points.length}/2
+        <div className="flex gap-2 items-center">
+          <Button variant="secondary" className="cursor-pointer" size="sm" onClick={() => setPoints([])}>
+            <RotateCcw /> Réinitialiser les points
+          </Button>
+          <p className="text-sm font-light">Points sélectionnés : {points.length}/2</p>
         </div>
+
+
 
         <Input
           placeholder="Distance réelle (en mètres)"

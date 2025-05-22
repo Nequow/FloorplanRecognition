@@ -29,5 +29,5 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src"]
+  "include": ["src", "../backup/Model backup.tsx", "../backup/MovableModel backup.tsx", "../backup/ScaleDialog copy.tsx", "../backup/UploadSection copy.tsx", "../backup/ModeSelector copy.tsx"]
 }

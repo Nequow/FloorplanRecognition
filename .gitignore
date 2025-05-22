@@ -1,6 +1,7 @@
 .vscode/
 cubicasa/
 uploads/
+backup/
 Wall-**/
 .env
 

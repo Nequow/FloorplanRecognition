@@ -1,25 +1,29 @@
 import { OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-import axios from "axios";
-import { Suspense, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { Toaster, toast } from "sonner";
+import { Suspense, useLayoutEffect, useRef, useState } from "react";
+import { toast, Toaster } from "sonner";
 
 import ModeSelector from "./components/ModeSelector";
-import Model from "./components/Model";
+import BaseModel from "./components/Model";
 import MovableModel from "./components/MovableModel";
 import UploadSection from "./components/UploadSection";
 
 import ScaleDialog from "./components/ScaleDialog";
 import { Pointer } from "./components/magicui/pointer";
-import { ModeToggle } from "./components/mode-toggle";
+import { ScrollProgress } from "./components/magicui/scroll-progress";
 import { ThemeProvider } from "./components/theme-provider";
+import { ThemeToggle } from "./components/theme-toggle";
 import { Card } from "./components/ui/card";
 import { Spinner } from "./components/ui/spinner";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 export default function App() {
-  const [baseModelUrl, setBaseModelUrl] = useState<string | null>(null);
+  const [baseModel, setBaseModel] = useState<{
+    url: string | null;
+    fileUrl: string | null;
+    file: File | null;
+  }>({ url: null, fileUrl: null, file: null });
   const [movableModel, setMovableModel] = useState<{
     url: string | null;
     fileName: string | null;
@@ -30,26 +34,40 @@ export default function App() {
     "translate" | "rotate" | "scale"
   >("translate");
 
+  // Reference for the OrbitControls, which allows us to control the camera
   const orbitRef = useRef(null);
+  // References for the input elements to handle file uploads
   const movableInputRef = useRef<HTMLInputElement | null>(null);
   const baseInputRef = useRef<HTMLInputElement | null>(null);
 
+
+  // Get the theme from localStorage or default to "system"
   const theme = localStorage.getItem("vite-ui-theme") || "system";
 
-  const [showScaleDialog, setShowScaleDialog] = useState(false);
-  const [scaleDialogImage, setScaleDialogImage] = useState<string | null>(null);
+  /**
+   ***********************************************
+   ************** Scale Dialog *******************
+   ***********************************************
+   */
+  const [scaleDialog, setScaleDialog] = useState<{
+    open: boolean;
+    imageUrl: string | null;
+    handlerRef: React.RefObject<(p1: any, p2: any, d: number) => void>;
+  }>({
+    open: false,
+    imageUrl: null,
+    handlerRef: useRef(() => { }),
+  });
 
-  const scaleDialogHandlerRef = useRef<(p1: any, p2: any, d: number) => void>(
-    () => {}
-  );
   const setScaleDialogHandler = (fn: (p1: any, p2: any, d: number) => void) => {
-    scaleDialogHandlerRef.current = fn;
+    scaleDialog.handlerRef.current = fn;
   };
 
+  // Check if the backend API is ready on initial load
   useLayoutEffect(() => {
     const checkAPIStatus = async () => {
       try {
-        const res = await axios.get(`${BACKEND_URL}/`);
+        const res = await fetch(`${BACKEND_URL}/`);
         setIsAPIReady(res.status === 200);
       } catch (err) {
         console.error("Erreur API:", err);
@@ -59,6 +77,7 @@ export default function App() {
     checkAPIStatus();
   }, []);
 
+  // Function to select scale points and return a promise
   const selectScale = (
     imageUrl: string
   ): Promise<{
@@ -67,132 +86,201 @@ export default function App() {
     realDistance: number;
   }> => {
     return new Promise((resolve) => {
-      setShowScaleDialog(true);
-      setScaleDialogImage(imageUrl);
+      setScaleDialog((prev) => ({ ...prev, open: true, imageUrl: imageUrl }));
       setScaleDialogHandler((p1, p2, dist) =>
         resolve({ point1: p1, point2: p2, realDistance: dist })
       );
     });
   };
 
-  const handleBaseUpload = async (file: File) => {
-    setLoading(true);
+  // Function to reset the base model state
+  const resetBaseModel = () => {
+    setBaseModel((prev) => ({ ...prev, url: null }));
+    if (baseInputRef.current) baseInputRef.current.value = "";
+  };
 
-    const imageUrl = URL.createObjectURL(file);
-    const formData = new FormData();
-    formData.append("file", file);
+  const resetScaleDialog = () => {
+    setScaleDialog((prev) => ({ ...prev, open: false, imageUrl: null }));
+    setScaleDialogHandler(() => () => { });
+  };
 
+  // Function to upload the base model (floor plan)
+  const baseModelUpload = async (formData: FormData) => {
     try {
-      const response = await axios.post(`${BACKEND_URL}/predict/`, formData);
+      const uploadResponse = await fetch(`${BACKEND_URL}/upload/`, {
+        method: "POST",
+        body: formData,
+      });
 
-      if (response.data.class === "floor plan") {
-        toast.success("L'image est un fond de plan valide !");
-      } else {
-        toast.error("L'image n'est pas un fond de plan valide !");
-        throw new Error("L'image n'est pas un fond de plan valide !");
+      if (!uploadResponse.ok) {
+        throw new Error("Erreur lors de l'upload du modèle 3D !");
       }
 
-      const { point1, point2, realDistance } = await selectScale(imageUrl);
+      const blob = await uploadResponse.blob();
+      const objectUrl = URL.createObjectURL(
+        new Blob([blob], { type: "application/octet-stream" })
+      );
 
-      formData.append("point1", `${point1.x},${point1.y}`);
-      formData.append("point2", `${point2.x},${point2.y}`);
-      formData.append("real_distance_m", `${realDistance}`);
-
-      try {
-        const uploadResponse = await axios.post(
-          `${BACKEND_URL}/upload/`,
-          formData,
-          {
-            responseType: "blob",
-          }
-        );
-        const objectUrl = URL.createObjectURL(
-          new Blob([uploadResponse.data], { type: "application/octet-stream" })
-        );
-        setBaseModelUrl(objectUrl);
-        toast.success("Modèle 3D du fond de plan généré avec succès !");
-      } catch (err) {
-        console.error("Erreur upload base:", err);
-        toast.error("Erreur lors de l'upload du modèle 3D !");
-        setBaseModelUrl(null);
-        if (baseInputRef.current) baseInputRef.current.value = "";
-      } finally {
-        setLoading(false);
-      }
+      setBaseModel((prev) => ({ ...prev, url: objectUrl }));
+      toast.success("Modèle 3D du fond de plan généré avec succès !");
     } catch (err) {
-      if (
-        typeof err === "object" &&
-        err !== null &&
-        "response" in err &&
-        typeof (err as any).response === "object" &&
-        (err as any).response !== null
-      ) {
-        const response = (err as any).response;
-        if (response.status === 400) {
-          toast.error("L'image n'est pas un fond de plan valide !");
-        } else if (response.status === 500) {
-          toast.error("Erreur lors de l'upload du modèle 3D !");
-        }
-      }
+      console.error("Erreur upload base:", err);
+      toast.error("Erreur lors de l'upload du modèle 3D !");
+      resetBaseModel();
+      resetScaleDialog();
+    } finally {
       setLoading(false);
-      if (baseInputRef.current) baseInputRef.current.value = "";
-      setBaseModelUrl(null);
     }
   };
 
+  // Function to verify if the uploaded file is a valid floor plan
+  const verifyFloorPlan = async (file: File): Promise<boolean> => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await fetch(`${BACKEND_URL}/predict/`, {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error("Erreur lors de la vérification du fond de plan !");
+    }
+
+    const data = await response.json();
+    return data.class === "floor plan";
+  };
+
+  // Function to handle the upload of the base model (floor plan)
+  const handleBaseUpload = async (file: File) => {
+    setLoading(true);
+    const imageUrl = URL.createObjectURL(file);
+    setBaseModel((prev) => ({ ...prev, file, fileUrl: imageUrl }));
+
+    try {
+      const isFloorPlan = await verifyFloorPlan(file);
+      if (!isFloorPlan)
+        throw new Error("L'image n'est pas un fond de plan valide !");
+      toast.info("L'image est un fond de plan valide !");
+      const { point1, point2, realDistance } = await selectScale(imageUrl);
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("point1", `${point1.x},${point1.y}`);
+      formData.append("point2", `${point2.x},${point2.y}`);
+      formData.append("real_distance_m", `${realDistance}`);
+      await baseModelUpload(formData);
+    } catch (err: any) {
+      console.error("Erreur handleBaseUpload:", err);
+      toast.error(err.message || "Une erreur est survenue lors du traitement.");
+      resetBaseModel();
+      resetScaleDialog();
+      setLoading(false);
+    }
+  };
+
+  // Function to handle the upload of a movable model (GLB or OBJ)
   const handleMovableUpload = (file: File) => {
     const objectUrl = URL.createObjectURL(file);
     setMovableModel({ fileName: file.name, url: objectUrl });
   };
 
-  useEffect(() => {}, [localStorage.getItem("vite-ui-theme")]);
+  // Function to clear the movable model state
+  const clearMovableModel = () => {
+    setMovableModel({ url: null, fileName: null });
+    if (movableInputRef.current) movableInputRef.current.value = "";
+    toast.success("Modèle 3D supprimé avec succès !");
+  };
+
+  /**
+   **********************************************
+   ************** Main application **************
+   **********************************************
+   */
   return (
     <ThemeProvider defaultTheme={"system"} storageKey="vite-ui-theme">
+      <ScrollProgress />
       <div className="p-5">
         {isAPIReady ? (
           <>
-            {showScaleDialog && scaleDialogImage && (
+            {/* Display the scale dialog if it's open */}
+            {scaleDialog.open && scaleDialog.imageUrl && (
               <ScaleDialog
-                open={showScaleDialog}
-                imageUrl={scaleDialogImage}
+                open={scaleDialog.open}
+                imageUrl={scaleDialog.imageUrl}
                 onClose={() => {
-                  setShowScaleDialog(false);
-                  setScaleDialogImage(null);
-                  setScaleDialogHandler(() => () => {});
-                  setBaseModelUrl(null);
+                  // clear the input value of the base model and close the dialog
                   if (baseInputRef.current) baseInputRef.current.value = "";
+                  setScaleDialog((prev) => ({
+                    ...prev,
+                    open: false,
+                  }));
+
+                  // Reset loading state
                   setLoading(false);
+
+                  // Show a toast notification
+                  // toast.info("Dialogue de mise à l'échelle fermé.");
                 }}
                 onConfirm={(p1, p2, realDist) =>
-                  scaleDialogHandlerRef.current(p1, p2, realDist)
+                  scaleDialog.handlerRef.current(p1, p2, realDist)
                 }
-                setShowScaleDialog={setShowScaleDialog}
+                setShowScaleDialog={(show: boolean) =>
+                  setScaleDialog((prev) => ({ ...prev, open: show }))
+                }
               />
             )}
-            <Card className="flex flex-row p-4 max-w-full max-h-62 items-center relative">
+            {/* Main application card with upload sections and mode selector */}
+            <Card className="flex flex-row p-4 max-w-full max-h-fit items-center relative ">
+              {/* Display the theme toggle button */}
               <div className="absolute top-4 right-4">
-                <ModeToggle />
+                <ThemeToggle />
               </div>
 
+              {/* Display the upload sections for base and movable models */}
               <div className="flex flex-col gap-4">
                 <h1 className="text-3xl font-bold">Manipulation 3D</h1>
 
+                {/* Upload sections for base model */}
                 <UploadSection
                   label="Importer le fond de plan :"
                   accept="image/*"
                   inputRef={baseInputRef as React.RefObject<HTMLInputElement>}
-                  fileUrl={baseModelUrl}
+                  fileUrl={baseModel.url}
                   onUpload={handleBaseUpload}
                   onClear={() => {
-                    setBaseModelUrl(null);
-                    if (baseInputRef.current) baseInputRef.current.value = "";
+                    // Clear the base model state and input value
+                    resetBaseModel();
+                    resetScaleDialog();
+
                     toast.success(
                       "Modèle 3D du Fond de plan supprimé avec succès !"
                     );
-                    setScaleDialogImage(null);
+                  }}
+                  onScaleRedefine={async () => {
+                    setLoading(true);
+                    setScaleDialog((prev) => ({
+                      ...prev,
+                      open: true,
+                      imageUrl: baseModel.fileUrl,
+                    }));
+                    const { point1, point2, realDistance } = await selectScale(
+                      scaleDialog.imageUrl!
+                    );
+                    const formData = new FormData();
+                    formData.append("file", baseModel.file!);
+                    formData.append("point1", `${point1.x},${point1.y}`);
+                    formData.append("point2", `${point2.x},${point2.y}`);
+                    formData.append("real_distance_m", `${realDistance}`);
+                    toast.success(
+                      "Echelle redéfinie avec succès ! Génération en cours..."
+                    );
+                    resetBaseModel();
+                    await baseModelUpload(formData);
+                    setLoading(false);
                   }}
                 />
 
+                {/* Upload sections for movable model */}
                 <UploadSection
                   label="Importer un objet 3D (GLB ou OBJ) :"
                   accept=".glb,.obj"
@@ -201,14 +289,11 @@ export default function App() {
                   }
                   fileUrl={movableModel.url}
                   onUpload={handleMovableUpload}
-                  onClear={() => {
-                    setMovableModel({ url: null, fileName: null });
-                    if (movableInputRef.current)
-                      movableInputRef.current.value = "";
-                    toast.success("Modèle 3D supprimé avec succès !");
-                  }}
+                  onClear={clearMovableModel}
                 />
 
+                {/* Mode selector is only shown if a movable model is uploaded */}
+                {/* Buttons to toggle movable model modes (movement, rotation) */}
                 {movableModel.url && (
                   <ModeSelector
                     mode={transformMode}
@@ -217,18 +302,19 @@ export default function App() {
                 )}
               </div>
 
-              {baseModelUrl && (
-                <div>
+              {/*  Display the image of the base model if it exists */}
+              {baseModel.url && (
+                <div className="flex justify-center items-center lg:w-52 lg:h-52 lg:ml-20 overflow-auto">
                   <img
-                    src={scaleDialogImage || ""}
-                    className="w-52 h-52 ml-20"
+                    src={scaleDialog.imageUrl || ""}
+                    className="rounded-lg border w-full h-full"
                   ></img>
                 </div>
               )}
-              {/* {loading && <p>Traitement en cours...</p>} */}
             </Card>
 
-            <Card className="flex flex-col mt-4 relative">
+            {/* 3D Canvas with the base model and movable model */}
+            <Card className="flex flex-col mt-4 relative py-0 gap-0">
               {loading && (
                 <div className="absolute top-4 right-4">
                   <Spinner size="large" />
@@ -236,16 +322,19 @@ export default function App() {
               )}
 
               <Canvas
+                style={{ height: "600px" }}
                 camera={{ position: [10, 10, 10], fov: 50 }}
-                style={{ height: "600px", marginTop: "20px" }}
               >
                 <ambientLight intensity={0.5} />
                 <directionalLight position={[5, 10, 5]} intensity={3.5} />
                 <directionalLight position={[-5, -10, -5]} intensity={3.5} />
                 <gridHelper args={[100, 100]} />
                 <Suspense fallback={null}>
-                  {baseModelUrl && (
-                    <Model url={baseModelUrl} position={[0, 0, 0]} />
+                  {baseModel.url && (
+                    <BaseModel
+                      url={baseModel.url}
+                      position={[0, 0, 0]}
+                    />
                   )}
                   {movableModel.url && (
                     <MovableModel
@@ -267,6 +356,7 @@ export default function App() {
           </div>
         )}
 
+        {/* Toast notifications for success, error, and info messages */}
         <Toaster
           key={theme}
           richColors

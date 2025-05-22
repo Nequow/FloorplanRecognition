@@ -7,7 +7,7 @@ from trimesh.creation import extrude_polygon
 
 def generate_wall_polygon_from_bbox(wall_bbox):
     wall_polygon = Polygon()
-    for i, (x_min, y_min, x_max, y_max) in enumerate(wall_bbox):
+    for (x_min, y_min, x_max, y_max) in wall_bbox:
 
         bbox_width = x_max - x_min
         bbox_height = y_max - y_min
@@ -19,19 +19,12 @@ def generate_wall_polygon_from_bbox(wall_bbox):
 
 
 def extrude_polygon(polygon, height):
-    """Extrait un polygone 2D et l'extrude pour créer une forme 3D."""
+    """Extrait un polygone 2D et l'extrude pour créer une forme 3D à l'échelle réelle."""
 
-    # Vérifier et réparer le polygone si nécessaire
     if not polygon.is_valid:
-        polygon = polygon.buffer(0)  # Réparer les polygones invalides
+        polygon = polygon.buffer(0)
 
-    # # Convertir les coordonnées du polygone en un tableau NumPy
-    # vertices = np.array(polygon.exterior.coords)
-
-    # # Ajouter la coordonnée Z aux vertices pour créer une extrusion 3D
-    # top_vertices = np.column_stack([vertices, np.full(len(vertices), height)])  # Ajout de la coordonnée Z
-
-    # Créer la mesh 3D en utilisant les faces du haut et du bas
+    # Extrusion avec la hauteur réelle (en mètres)
     mesh = trimesh.creation.extrude_polygon(polygon, height, engine="triangle")
 
     return mesh

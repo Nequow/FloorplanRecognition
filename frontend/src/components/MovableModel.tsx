@@ -1,13 +1,13 @@
 import { TransformControls } from "@react-three/drei";
 import { useLoader } from "@react-three/fiber";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 
 interface MovableModelProps {
   url: string;
   filename: string | null;
-  orbitRef: React.MutableRefObject<any>;
+  orbitRef: React.RefObject<any>;
   mode: "translate" | "rotate" | "scale";
 }
 
@@ -23,8 +23,10 @@ export default function MovableModel({
   const gltf = isGLB ? useLoader(GLTFLoader, url) : null;
   const obj = isOBJ ? useLoader(OBJLoader, url) : null;
 
-  const [position, setPosition] = useState<[number, number, number]>([0, 0, 0]);
   const transformRef = useRef<any | null>(null);
+
+  const model = isGLB ? gltf?.scene : isOBJ ? obj : null;
+  if (!model) return null;
 
   useEffect(() => {
     const controls = transformRef.current;
@@ -38,19 +40,11 @@ export default function MovableModel({
     return () => controls.removeEventListener("dragging-changed", callback);
   }, [orbitRef]);
 
-  const model = isGLB ? gltf?.scene : isOBJ ? obj : null;
-  if (!model) return null;
 
   return (
     <TransformControls
       ref={transformRef}
-      position={position}
       mode={mode}
-      onChange={(e: any) => {
-        if (e?.target?.position) {
-          setPosition(e.target.position);
-        }
-      }}
     >
       <primitive object={model} />
     </TransformControls>

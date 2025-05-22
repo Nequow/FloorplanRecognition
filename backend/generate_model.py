@@ -8,7 +8,7 @@ from windows import cut_and_place_windows
 
 
 def generate_3d_model_from_polygons(
-    polygons,
+    wall_polygons,
     wall_bboxes,
     door_data,
     window_data,
@@ -21,10 +21,10 @@ def generate_3d_model_from_polygons(
 ):
     # print(f"🗞️ Real world scale: {real_world_scale}")
     # # Créer la mesh des murs
-    wall_mesh = create_wall_meshes(polygons, wall_height, real_world_scale)
+    wall_mesh = create_wall_meshes(wall_polygons, wall_height, real_world_scale)
 
     # Extraire les pièces
-    rooms_polygons = extract_room_polygons(polygons)
+    rooms_polygons = extract_room_polygons(wall_polygons)
 
     # Créer les sols avec les textures
     floor_meshes = create_floor_meshes_with_texture(

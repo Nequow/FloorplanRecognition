@@ -6,7 +6,10 @@ interface ModelProps {
   position?: [number, number, number];
 }
 
-export default function Model({ url, position = [0, 0, 0] }: ModelProps) {
+export default function BaseModel({
+  url,
+  position = [0, 0, 0],
+}: ModelProps) {
   const model = useLoader(GLTFLoader, url);
 
   return <primitive object={model.scene} position={position} />;
