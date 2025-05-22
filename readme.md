@@ -11,6 +11,9 @@
 [![Docker](https://img.shields.io/badge/docker-ready-blue?style=for-the-badge&logo=docker)]()
 [![Node.js](https://img.shields.io/badge/node-%3E=18.0.0-brightgreen?style=for-the-badge&logo=javascript)]()
 [![Python](https://img.shields.io/badge/python-%3E=3.11.11-blueviolet?style=for-the-badge&logo=python)]()
+[![React](https://img.shields.io/badge/react-frontend-61DAFB?style=for-the-badge&logo=react)]()
+[![Vite](https://img.shields.io/badge/vite-build%20tool-646CFF?style=for-the-badge&logo=vite)]()
+[![FastAPI](https://img.shields.io/badge/fastapi-backend-009688?style=for-the-badge&logo=fastapi)]()
 
 </div>
 
