@@ -5,7 +5,7 @@ from walls import generate_wall_polygon_from_bbox
 from utils import process_polygons
 from generate_model import generate_3d_model_from_polygons
 from my_logger import my_logger
-
+import os
 
 def detect_and_generate_3d(image_path: str, scale: float):
     my_logger.info(f"Image path: {image_path}")
@@ -21,6 +21,7 @@ def detect_and_generate_3d(image_path: str, scale: float):
     wall_polygon = generate_wall_polygon_from_bbox(bbox["wall_boxes"])
     polygons = process_polygons(wall_polygon)
 
+    os.makedirs("outputs", exist_ok=True)
     output_path = f"outputs/{image_path.split('/')[-1].split('.')[0]}.glb"
     mesh = generate_3d_model_from_polygons(
         wall_polygons=polygons,
