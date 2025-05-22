@@ -66,7 +66,7 @@ Download and place the following model files in the `checkpoints` folder:
 
 ---
 
-### <img src="https://img.icons8.com/color/48/000000/docker.png" width="30" style="vertical-align:middle;margin-right:10px;"/> Option 1: Run with Docker
+### <img id="docker-option" src="https://img.icons8.com/color/48/000000/docker.png" width="30" style="vertical-align:middle;margin-right:10px;"/> Option 1: Run with Docker
 
 The easiest way to get started is using Docker. This method automatically sets up both the backend and frontend services with a single command.
 
@@ -95,7 +95,7 @@ docker-compose up -d --build
 
 ---
 
-### <img src="https://img.icons8.com/fluency/48/000000/code.png" width="30" style="vertical-align:middle;margin-right:10px;"/> Option 2: Manual Setup
+### <img id="manual-option" src="https://img.icons8.com/fluency/48/000000/code.png" width="30" style="vertical-align:middle;margin-right:10px;"/> Option 2: Manual Setup
 
 If you prefer to run the services separately or need more control over the setup, follow these instructions:
 
