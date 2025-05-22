@@ -58,7 +58,7 @@ Download and place the following model files in the `checkpoints` folder:
 
 ## 🚀 Getting Started
 
-<div style="text-align:center;padding:10px;">
+<div align="center">
   <p>Choose your preferred installation method below</p>
   <div style="display:inline-block;margin:0 15px;">
     <a href="#docker-option"><img src="https://img.shields.io/badge/Option%201-Docker-blue?style=for-the-badge&logo=docker" alt="Docker Option" /></a>
@@ -68,20 +68,20 @@ Download and place the following model files in the `checkpoints` folder:
   </div>
 </div>
 
-<div id="docker-option" style="margin-top:20px;padding:15px;border-radius:8px;border-left:4px solid #0db7ed;background-color:rgba(13,183,237,0.1);">
+---
 
 ### <img src="https://img.icons8.com/color/48/000000/docker.png" width="30" style="vertical-align:middle;margin-right:10px;"/> Option 1: Run with Docker
 
 The easiest way to get started is using Docker. This method automatically sets up both the backend and frontend services with a single command.
 
-<div style="padding:15px;border-radius:5px;margin:10px 0;">
+
 
 #### Prerequisites
 
 - [Docker](https://www.docker.com/get-started) installed on your system
 - [Docker Compose](https://docs.docker.com/compose/install/) (usually included with Docker Desktop)
 
-</div>
+
 
 ```bash
 # Run the application with Docker
@@ -97,17 +97,13 @@ docker-compose up -d --build
 </ul>
 </details>
 
-</div>
-
-<div id="manual-option" style="margin-top:30px;padding:15px;border-radius:8px;border-left:4px solid #3cb371;background-color:rgba(60,179,113,0.1);">
+---
 
 ### <img src="https://img.icons8.com/fluency/48/000000/code.png" width="30" style="vertical-align:middle;margin-right:10px;"/> Option 2: Manual Setup
 
 If you prefer to run the services separately or need more control over the setup, follow these instructions:
 
-<div style="display:flex;flex-wrap:wrap;gap:20px;margin:20px 0;">
 
-<div style="flex:1;min-width:300px;padding:15px;border-radius:5px;border:2px solid #4b8bbe;box-shadow:0 0 10px rgba(75,139,190,0.2);">
 
 #### <img src="https://img.icons8.com/color/48/000000/python.png" width="24" style="vertical-align:middle;margin-right:5px;"/> Backend Setup (Terminal 1)
 
@@ -134,9 +130,7 @@ pip install -r requirements.txt
 python backend/__main__.py
 ```
 
-</div>
-
-<div style="flex:1;min-width:300px;padding:15px;border-radius:5px;border:2px solid #f7df1e;box-shadow:0 0 10px rgba(247,223,30,0.2);">
+---
 
 #### <img src="https://img.icons8.com/color/48/000000/javascript.png" width="24" style="vertical-align:middle;margin-right:5px;"/> Frontend Setup (Terminal 2)
 
@@ -159,14 +153,9 @@ echo "VITE_BACKEND_URL=http://localhost:8000" > .env
 npm run dev
 ```
 
-</div>
-</div>
 
-<div style="background-color:rgba(255,223,186,0.3);border-left:3px solid #ff8c00;padding:10px;margin-top:15px;border-radius:5px;">
 <strong>💡 Tip:</strong> Keep both terminal windows open while using the application. The backend must be running for the frontend to function properly.
-</div>
 
-</div>
 
 <hr style="height:2px;border-width:0;color:gray;background-color:gray">
 
