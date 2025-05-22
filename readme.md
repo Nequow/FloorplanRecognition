@@ -44,15 +44,17 @@ Download and place the following model files in the `checkpoints` folder:
     <tr>
       <td align="center"><code>Best_EfficientNet_B0.pt</code></td>
       <td align="center">🖼️ Image classification model</td>
-      <td align="center"><a href="https://drive.google.com/file/d/1oyJfknmaAk0TNeMetndZbKtsiMjSvcVr/view?usp=sharing"><img src="https://img.shields.io/badge/download-model-success?style=for-the-badge" alt="Download" /></a></td>
+      <td align="center"><a href="https://drive.google.com/file/d/1ZzSI1BGaTm5I09qQOur3rb-YB75tJunq/view?usp=sharing"><img src="https://img.shields.io/badge/download-model-success?style=for-the-badge"  alt="Download" /></a></td>
     </tr>
     <tr>
       <td align="center"><code>cubicasa5k-rfdetr-wall-window-door-v3.pt</code></td>
       <td align="center">🧱 Object detection model<br />(walls, windows, doors)</td>
-      <td align="center"><a href="https://drive.google.com/file/d/1ZzSI1BGaTm5I09qQOur3rb-YB75tJunq/view?usp=sharing"><img src="https://img.shields.io/badge/download-model-success?style=for-the-badge" alt="Download" /></a></td>
+      <td align="center"><a href="https://drive.google.com/file/d/1oyJfknmaAk0TNeMetndZbKtsiMjSvcVr/view?usp=sharing"><img src="https://img.shields.io/badge/download-model-success?style=for-the-badge" alt="Download" /></a></td>
     </tr>
   </tbody>
 </table>
+
+
 
 <hr style="height:2px;border-width:0;color:gray;background-color:gray">
 
