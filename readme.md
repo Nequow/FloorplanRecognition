@@ -60,12 +60,8 @@ Download and place the following model files in the `checkpoints` folder:
 
 <div align="center">
   <p>Choose your preferred installation method below</p>
-  <div style="display:inline-block;margin:0 15px;">
     <a href="#docker-option"><img src="https://img.shields.io/badge/Option%201-Docker-blue?style=for-the-badge&logo=docker" alt="Docker Option" /></a>
-  </div>
-  <div style="display:inline-block;margin:0 15px;">
     <a href="#manual-option"><img src="https://img.shields.io/badge/Option%202-Manual%20Setup-green?style=for-the-badge&logo=terminal" alt="Manual Option" /></a>
-  </div>
 </div>
 
 ---
@@ -122,7 +118,7 @@ pip install -r requirements.txt
 ```
 
 **Platform-Specific Setup:**
-- **Windows Users:** Install GTK3 from [this link](https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer/releases)
+- **Windows Users:** Install GTK3 from [this link](https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer/releases). Download and execute the `.exe` file.
 
 **Run the backend:**
 
