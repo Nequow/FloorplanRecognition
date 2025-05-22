@@ -69,7 +69,7 @@ Download and place the following model files in the `checkpoints` folder:
 
 ---
 
-### <img id="docker-option" src="https://img.icons8.com/color/48/000000/docker.png" width="30" style="vertical-align:middle;margin-right:10px;"/> Option 1: Run with Docker
+### <img id="docker-option" src="https://img.icons8.com/color/48/000000/docker.png" width="30" align="center"/> Option 1: Run with Docker
 
 The easiest way to get started is using Docker. This method automatically sets up both the backend and frontend services with a single command.
 
@@ -98,13 +98,13 @@ docker-compose up -d --build
 
 ---
 
-### <img id="manual-option" src="https://img.icons8.com/fluency/48/000000/code.png" width="30" style="vertical-align:middle;margin-right:10px;"/> Option 2: Manual Setup
+### <img id="manual-option" src="https://img.icons8.com/fluency/48/000000/code.png" width="30" align="center"/> Option 2: Manual Setup
 
 If you prefer to run the services separately or need more control over the setup, follow these instructions:
 
 
 
-#### <img src="https://img.icons8.com/color/48/000000/python.png" width="24" style="vertical-align:middle;margin-right:5px;"/> Backend Setup (Terminal 1)
+#### <img src="https://img.icons8.com/color/48/000000/python.png" width="24" align="center"/> Backend Setup (Terminal 1)
 
 **Requirements:**
 - Python `>= 3.11.11` (⚠️ recommended version: `3.11.11`)
@@ -131,7 +131,7 @@ python backend/__main__.py
 
 ---
 
-#### <img src="https://img.icons8.com/color/48/000000/javascript.png" width="24" style="vertical-align:middle;margin-right:5px;"/> Frontend Setup (Terminal 2)
+#### <img src="https://img.icons8.com/color/48/000000/javascript.png" width="24" align="center"/> Frontend Setup (Terminal 2)
 
 **Requirements:**
 - `node ≥ 18.0.0`
