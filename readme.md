@@ -19,10 +19,8 @@
 ## 📸 Demo
 
 <div align="center">
-  <img src="docs/screenshot.png" alt="Web App Screenshot" width="90%" style="border-radius:10px;box-shadow:0 4px 8px rgba(0,0,0,0.1);" />
+  <img src="assets/demo.gif" alt="3D Floorplan Web App Demo" width="90%" style="border-radius:10px;box-shadow:0 4px 8px rgba(0,0,0,0.1);" />
 </div>
-
-> 📌 **_Replace `docs/screenshot.png` with your own screenshot or animated GIF to showcase your app in action!_**
 
 <hr style="height:2px;border-width:0;color:gray;background-color:gray">
 
