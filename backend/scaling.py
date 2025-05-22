@@ -1,4 +1,3 @@
-from math import sqrt
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 from constants import DATASET
